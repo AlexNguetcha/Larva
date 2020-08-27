@@ -1,0 +1,15 @@
+{
+    "name": "user/project1",
+    "authors": [
+        {
+            "name": "alexnguetcha",
+            "email": "nguetchaalex@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src"
+        }
+    }
+}
