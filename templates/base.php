@@ -18,7 +18,7 @@
                     <th scope="col">Age</th>
                 </tr>
             </thead>
-            <?php for ($i = 0; $i < count($params["users"]); $i++) : $user = $params["users"][$i]; ?>
+            <?php for ($i = 0; $i < count($users); $i++) : $user = $users[$i]; ?>
                 <tr>
                     <td><?= $user->getId() ?></td>
                     <td><?= $user->getName() ?></td>

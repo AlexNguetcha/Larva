@@ -5,6 +5,18 @@ namespace App\Router;
 class Router{
     private $matcher = [];
     private $path;
+    /**
+     * Tableau des differents slug present 
+     * dans l'url
+     * @var array
+     */
+    private $slug = [];
+    /**
+     * Tableau des differents id present 
+     * dans l'url
+     * @var array
+     */
+    private $id = [];
 
     public function __construct(string $path)
     {
@@ -35,6 +47,25 @@ class Router{
 
     }
 
+    private function match(string $pathname, string $type):bool
+    {
+        return is_int($this->createPattern($pathname, $type));
+    }
+
+    private function createPattern(string $pathname, string $type)
+    {
+        $pathname = str_replace("/", "/\\", $pathname);
+        $pattern = "^";
+        if ($type == "slug") {
+            $pattern .= str_replace("[:slug]", "([a-b]-{1,})", $pathname)."$";
+            return preg_match($pattern, $this->path, $this->slug);
+        }elseif ($type == "id") {
+            $pattern .= str_replace("[:id]", "([0-9]{1,})", $pathname)."$";
+            echo $pattern;
+            return preg_match($pattern, $this->path, $this->id);
+        }
+    }
+
     private function createMap()
     {
         //$this->addAutoMap();
@@ -43,8 +74,11 @@ class Router{
             //var_dump($route);
             foreach ($route as $pathname => $closure) {            
                 if ($this->path === $pathname) {
-                    return $closure();
+                    return $closure($this->id, $this->slug);
                 }
+                /**if ($this->match($pathname, "slug") OR $this->match($pathname, "id")) {
+                    return $closure($this->id, $this->slug);
+                }*/
             }
         }
         require_once "../templates/404.php";;
