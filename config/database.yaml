@@ -1,4 +1,0 @@
-DSN: mysql:host=localhost
-DB_NAME: project1
-USER_NAME: root
-PASSWORD: ""

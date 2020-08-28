@@ -2,6 +2,7 @@
 
 namespace App\Repository\Base;
 
+use App\Components\Json;
 use App\Database\PDOFACTORY;
 use App\Parser\YamlParser;
 use Exception;
@@ -35,13 +36,15 @@ class BaseRepository implements Repository
 
     private function getPDO():PDO
     {
-        //$dbConfig = YamlParser::parseFile("../config/database.yaml");
-        $dbConfig = [];
-        $dbConfig["HOST"] = "localhost";
-        $dbConfig["DB_NAME"] = "project1";
-        $dbConfig["USER_NAME"] = "root";
-        $dbConfig["PASSWORD"] = "";
-        $pdo = new PDOFACTORY($dbConfig["DB_NAME"]);
+        $json = Json::getInstance();
+
+        $dbConfig = $json->decode(file_get_contents("../config/database.json"));
+        $pdo = new PDOFACTORY(
+            $dbConfig["dbname"],
+            $dbConfig["username"],
+            $dbConfig["hostname"],
+            $dbConfig["password"] 
+        );
         return $pdo->getMsqlConnection();
     }
 

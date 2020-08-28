@@ -10,14 +10,16 @@ class UserController extends BaseController{
 
     public function index():Render
     {
+        echo($this->json()->encode(["age"=>19]));
+        var_dump($this->json()->decode('{"age":19}')["age"]);
         $repo = new UserRepository();
         $users = $repo->findBy();
-        return new Render("base.php", ["users"=>$users]);
+        return new Render("base.php", [
+            "users"=>$users,
+            "title"=>"Users List"
+            ]
+        );
     }
 
-    public function cards():Render
-    {
-        return new Render("base.php", ["name"=>"alex"]);
-    }
 
 }
