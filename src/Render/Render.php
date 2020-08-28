@@ -1,11 +1,14 @@
 <?php 
 namespace App\Render;
+use App\Components\Loader;
 
 class Render{
     private $filename;
     private $params;
 
-    public function __construct(string $filename, array $params=null)
+    private $root;
+
+    public function __construct(string $filename, array $params=[], $root="../templates/")
     {
         /**
          * Le nom des cles dans le tableau $params
@@ -14,11 +17,17 @@ class Render{
          * alors $users sera crée contenant la valeur
          * présente dans le tableau
          */
+        $loader = new Loader;
         foreach ($params as $key => $value) {
             $tmp = $key;
             $$tmp = $value;
         }
-        require_once "../templates/".$filename;
+        require_once $root.$filename;
+    }
+
+    private function setPath(string $path)
+    {
+        $this->path = $path;
     }
 
 

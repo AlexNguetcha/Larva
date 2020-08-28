@@ -65,7 +65,7 @@ class QueryBuilder
         if (count($this->where) !== 0) {
             $query .= " WHERE ";
             for ($i = 0; $i < count($this->where); $i++) {
-                $query .= $this->alias.".".$this->where[$i];
+                $query .= $this->where[$i];
                 if ($i < count($this->where) - 1) {
                     $query .= " AND ";
                 }

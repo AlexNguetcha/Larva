@@ -20,7 +20,7 @@ class BaseRepository implements Repository
         $alias = strtolower($alias[count($alias)-1][0]);
         $builder = $this->createQueryBuilder($alias);
         foreach ($properties as $key => $value) {
-            $builder->andWhere($key. "=:" .$key)
+            $builder->andWhere($alias.".".$key. "=:" .$key)
             ->setParameter($key, $value);
         }
         return $builder->getResult();        
