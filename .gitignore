@@ -2,5 +2,5 @@
 /test.php
 /commit.txt
 /templates/user
-src/Controller/UserController.php
-src/Repository/UserRepository.php
+/src/Controller/user
+/src/Repository/user
