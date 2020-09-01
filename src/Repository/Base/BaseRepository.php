@@ -3,12 +3,7 @@
 namespace App\Repository\Base;
 
 use PDO;
-use Exception;
-use App\Components\Json;
 use App\Database\Database;
-use App\Model\Base\Model;
-use App\Parser\YamlParser;
-use App\Database\PDOFACTORY;
 use App\Model\Base\BaseModel;
 use App\Repository\Base\QueryBuilder;
 
@@ -122,8 +117,6 @@ class BaseRepository implements Repository
         $query = "DELETE FROM " . $this->getTableName() . " WHERE id=:id";
         $params = [];
         $params["id"] =  call_user_func(array($model, "getID"));
-        //echo $query;
-        //print_r($params);
         $builder = $this->createQueryBuilder("");
         $builder  = $builder->setQueryString($query)
             ->setParams($params)
