@@ -5,13 +5,22 @@ use App\Model\Base\BaseModel;
 
 
 class UserModel extends BaseModel{
+    /**
+     * @var int
+     */
     private $id;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var int
+     */
     private $age;
 
     public function getClassVars(): array
     {
-        return get_class_vars(get_class());
+        return get_class_vars(get_class($this));
     }
 
     /**function __construct(int $id, string $name, int $age)
@@ -40,16 +49,16 @@ class UserModel extends BaseModel{
         return $this;
     }
 
-    public function getId():?int
+    public function getId(): int
     {
         return $this->id;
     }
-    public function getName():?string 
+    public function getName(): string 
     {
         return $this->name;
     }
 
-    public function getAge():?int 
+    public function getAge(): int 
     {
         return $this->age;
     }

@@ -5,6 +5,7 @@ namespace App\Repository\Base;
 use PDO;
 use Exception;
 use App\Components\Json;
+use App\Database\Database;
 use App\Model\Base\Model;
 use App\Parser\YamlParser;
 use App\Database\PDOFACTORY;
@@ -17,43 +18,34 @@ class BaseRepository implements Repository
 
     private $queryBuilder;
 
-    public function findBy(array $properties=[]): array
+    public function findBy(array $properties = []): array
     {
         $alias = explode("\\", get_class($this));
-        $alias = strtolower($alias[count($alias)-1][0]);
+        $alias = strtolower($alias[count($alias) - 1][0]);
         $builder = $this->createQueryBuilder($alias);
         foreach ($properties as $key => $value) {
-            $builder->andWhere($alias.".".$key. "=:" .$key)
-            ->setParameter($key, $value);
+            $builder->andWhere($alias . "." . $key . "=:" . $key)
+                ->setParameter($key, $value);
         }
-        return $builder->getResult();        
+        return $builder->getResult();
     }
 
-    public function createQueryBuilder(string $alias = null):QueryBuilder
+    public function createQueryBuilder(string $alias = null): QueryBuilder
     {
         $builder =  new QueryBuilder($this->getPDO(), $this->getTableName());
         return $builder->create($alias);
     }
 
-    protected function getTableName():string
+    protected function getTableName(): string
     {
         $tableName = explode("\\", get_class($this));
         $tableName = str_replace("repository", "", strtolower($tableName[count($tableName) - 1]));
         return $tableName;
     }
 
-    private function getPDO():PDO
+    private function getPDO(): PDO
     {
-        $json = Json::getInstance();
-
-        $dbConfig = $json->decode(file_get_contents("../config/database.json"));
-        $pdo = new PDOFACTORY(
-            $dbConfig["dbname"],
-            $dbConfig["username"],
-            $dbConfig["hostname"],
-            $dbConfig["password"] 
-        );
-        return $pdo->getMsqlConnection();
+        return Database::getPDO();
     }
 
     /**
@@ -62,9 +54,9 @@ class BaseRepository implements Repository
      * @param BaseModel $model
      * @return BaseModel
      */
-    public final function insert(BaseModel $model):BaseModel
+    public final function insert(BaseModel $model): BaseModel
     {
-        $query = "INSERT INTO ".$this->getTableName()." VALUES(";
+        $query = "INSERT INTO " . $this->getTableName() . " VALUES(";
         //recuperation des proprietes du model
         $vars = $model->getClassVars();
         $i = 0;
@@ -75,22 +67,68 @@ class BaseRepository implements Repository
                 $query .= ", ";
             }
             $getter = $key[0];
-            $getter = "get".strtoupper($getter).str_replace($getter, "", $key);
+            $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
             //appel du getter et recuperation
             //de la valeur de chaque proprietes
-            $getterValue =  call_user_func(array($model, $getter));
+            $getterValue = null;
+            if (strtolower($getter) !== "getid") {
+                $getterValue =  call_user_func(array($model, $getter));
+            }
             $params[$key] = $getterValue;
             $i++;
         }
         $query .= ")";
         $builder = $this->createQueryBuilder("");
         $builder  = $builder->setQueryString($query)
-        ->setParams($params)
-        ->execute();
-;
-        //echo $builder->getQueryString();
-        //print_r($params);
+            ->setParams($params)
+            ->execute();
+
         return $model;
     }
 
+    public function update(BaseModel $model)
+    {
+        $query = "UPDATE ".$this->getTableName()." SET ";
+        $vars = $model->getClassVars();
+        $i = 0;
+        $params = [];
+        foreach ($vars as $key => $value) {
+            if (strtolower($key) !== "id") {
+                $query .= "{$key}=:{$key}";
+                if ($i !== count($vars) - 2) {
+                    $query .= ", ";
+                }
+                $getter = $key[0];
+                $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
+                //appel du getter et recuperation
+                //de la valeur de chaque proprietes
+                $getterValue =  call_user_func(array($model, $getter));
+                $params[$key] = $getterValue;
+                $i++;
+            }else{
+                $params["id"] =  call_user_func(array($model, "getID"));
+            }
+        }
+        $query .=" WHERE id=:id";;
+        
+        $builder = $this->createQueryBuilder("");
+        $builder  = $builder->setQueryString($query)
+            ->setParams($params)
+            ->execute();
+    }
+
+    public final function delete(BaseModel $model): BaseModel
+    {
+        $query = "DELETE FROM " . $this->getTableName() . " WHERE id=:id";
+        $params = [];
+        $params["id"] =  call_user_func(array($model, "getID"));
+        //echo $query;
+        //print_r($params);
+        $builder = $this->createQueryBuilder("");
+        $builder  = $builder->setQueryString($query)
+            ->setParams($params)
+            ->execute();
+
+        return $model;
+    }
 }
