@@ -19,6 +19,7 @@ class QueryBuilder
     private $tableName;
     private $where = [];
     private $params = [];
+    private $queryString = "";
     private $maxResult = null;
     private $orders = [];
 
@@ -60,6 +61,20 @@ class QueryBuilder
 
     public function getQueryString(): string
     {
+        if (strlen($this->queryString) !== 0) {
+            /**
+             * queryString a été parametrer a partir 
+             * du setter
+             */
+            return $this->queryString;
+        } else {
+            //construction automatique d'une select request
+            return $this->createSelectQuery();
+        }
+    }
+
+    private function createSelectQuery():string
+    {
         $query = "SELECT * FROM " . $this->tableName . " AS " . $this->alias;
         //add where clause 
         if (count($this->where) !== 0) {
@@ -76,19 +91,22 @@ class QueryBuilder
             $query .= " ORDER BY " . $this->orders[$i] . " ";
         }
         //add limit clause 
-        if ($this->maxResult !== null ) {
+        if ($this->maxResult !== null) {
             $query .= " LIMIT " . $this->maxResult;
         }
         return $query;
     }
 
-    private function parseClassName($class): string
+    public function setQueryString(string $queryString)
     {
-        
-        $className = str_replace("Repository", "", __CLASS__);
-        $className = str_replace(__NAMESPACE__ . "\\", "", $className);
-        $className = strtolower($className);
-        return $className;
+        $this->queryString = $queryString;
+        return $this;
+    }
+
+    public function setParams(array $params)
+    {
+        $this->params = $params;
+        return $this;
     }
 
     /**
@@ -101,27 +119,28 @@ class QueryBuilder
         return $this->pdo->prepare($this->getQueryString());
     }
 
+    private function getModelName(): string
+    {
+        $modelName = strtoupper($this->tableName[0]);
+        $modelName .= str_replace($this->tableName[0], "", $this->tableName);
+        return $modelName;
+    }
+
     public function getResult()
     {
         //var_dump($this->params);
         //var_dump($this->pdo->prepare("SELECT * FROM project1.user WHERE age=:age")->execute(["age"=>18]));
-        $modelName = strtoupper($this->tableName[0]);
-        $modelName .= str_replace($this->tableName[0], "", $this->tableName);
-        $prepared = $this->getQuery();
-        $prepared->execute($this->params);
+        $prepared = $this->execute();
         //"App\\Model\\" . $modelName . "Model"
         //echo $class."<br>";
         return $prepared
-            ->fetchAll(PDO::FETCH_CLASS , "App\Model\\".$modelName . "Model");;
+            ->fetchAll(PDO::FETCH_CLASS, "App\Model\\" . $this->getModelName() . "Model");;
+    }
+
+    public function execute(): PDOStatement
+    {   
+        $prepared = $this->getQuery();
+        $prepared->execute($this->params) or die(print_r($prepared->errorInfo()));
+        return $prepared;
     }
 }
-
-/**$test = new QueryBuilder(null);
-echo $test->create("u")
-->andWhere("u.age = :age")
-->andWhere("u.gender = :gender")
-->orderBy("u.name", "ASC")
-->setMaxResults(5)
-->setParameter("age", 18)
-->setParameter(":gender", "female")
-->getQueryString();**/

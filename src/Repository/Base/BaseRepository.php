@@ -2,11 +2,14 @@
 
 namespace App\Repository\Base;
 
-use App\Components\Json;
-use App\Database\PDOFACTORY;
-use App\Parser\YamlParser;
-use Exception;
 use PDO;
+use Exception;
+use App\Components\Json;
+use App\Model\Base\Model;
+use App\Parser\YamlParser;
+use App\Database\PDOFACTORY;
+use App\Model\Base\BaseModel;
+use App\Repository\Base\QueryBuilder;
 
 class BaseRepository implements Repository
 {
@@ -26,12 +29,17 @@ class BaseRepository implements Repository
         return $builder->getResult();        
     }
 
-    public function createQueryBuilder(string $alias):QueryBuilder
+    public function createQueryBuilder(string $alias = null):QueryBuilder
+    {
+        $builder =  new QueryBuilder($this->getPDO(), $this->getTableName());
+        return $builder->create($alias);
+    }
+
+    protected function getTableName():string
     {
         $tableName = explode("\\", get_class($this));
         $tableName = str_replace("repository", "", strtolower($tableName[count($tableName) - 1]));
-        $builder =  new QueryBuilder($this->getPDO(), $tableName);
-        return $builder->create($alias);
+        return $tableName;
     }
 
     private function getPDO():PDO
@@ -46,6 +54,43 @@ class BaseRepository implements Repository
             $dbConfig["password"] 
         );
         return $pdo->getMsqlConnection();
+    }
+
+    /**
+     * Met à jour un Model en base de donée
+     *
+     * @param BaseModel $model
+     * @return BaseModel
+     */
+    public final function insert(BaseModel $model):BaseModel
+    {
+        $query = "INSERT INTO ".$this->getTableName()." VALUES(";
+        //recuperation des proprietes du model
+        $vars = $model->getClassVars();
+        $i = 0;
+        $params = [];
+        foreach ($vars as $key => $value) {
+            $query .= ":{$key}";
+            if ($i !== count($vars) - 1) {
+                $query .= ", ";
+            }
+            $getter = $key[0];
+            $getter = "get".strtoupper($getter).str_replace($getter, "", $key);
+            //appel du getter et recuperation
+            //de la valeur de chaque proprietes
+            $getterValue =  call_user_func(array($model, $getter));
+            $params[$key] = $getterValue;
+            $i++;
+        }
+        $query .= ")";
+        $builder = $this->createQueryBuilder("");
+        $builder  = $builder->setQueryString($query)
+        ->setParams($params)
+        ->execute();
+;
+        //echo $builder->getQueryString();
+        //print_r($params);
+        return $model;
     }
 
 }

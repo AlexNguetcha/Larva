@@ -9,6 +9,11 @@ class UserModel extends BaseModel{
     private $name;
     private $age;
 
+    public function getClassVars(): array
+    {
+        return get_class_vars(get_class());
+    }
+
     /**function __construct(int $id, string $name, int $age)
     {
         $this->id = $id;
@@ -17,9 +22,21 @@ class UserModel extends BaseModel{
         
     }*/
 
-    public function setId(int $id)
+    public function setId(?int $id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setAge(int $age)
+    {
+        $this->age = $age;
         return $this;
     }
 

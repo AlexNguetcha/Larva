@@ -15,5 +15,15 @@ class UserRepository extends BaseRepository{
         ->getResult();
     }
 
+    public function search(string $search):array
+    {
+        return $this->createQueryBuilder("u")
+        ->andWhere("u.name LIKE :search")
+        ->setParameter("search", "%".$search."%")
+        ->getResult();
+    }
+
+
+
     
 }
