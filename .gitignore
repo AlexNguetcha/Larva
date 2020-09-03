@@ -1,6 +1,7 @@
 /vendor
 /test.php
 /commit.txt
-/templates/user
-/src/Controller/user
-/src/Repository/user
+/templates/User
+/src/Controller/User
+/src/Repository/User
+/src/Model/User

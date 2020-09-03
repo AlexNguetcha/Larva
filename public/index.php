@@ -3,7 +3,10 @@
 use App\Kernel\Kernel;
 use App\Router\Router;
 use App\Controller\HomeController;
-use App\Controller\UserController;
+use App\Controller\user\UserController;
+
+
+
 
 
 $kernel = new Kernel();

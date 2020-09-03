@@ -2,10 +2,10 @@
 
 namespace App\Repository\Base;
 
-use App\Model\Base\BaseModel;
 use PDO;
-use PDORow;
 use PDOStatement;
+
+
 
 class QueryBuilder
 {
@@ -126,15 +126,25 @@ class QueryBuilder
         return $modelName;
     }
 
-    public function getResult()
+    /**
+     * Recupere un tableau d'objet modèle
+     *
+     * @param string $classSubPath 
+     * est necessaire si la classe représentant 
+     * le modéle ne se retrouve pas dans la racine
+     * du dossier Model
+     * @return array
+     */
+    public function getResult(string $classSubPath=null)
     {
-        //var_dump($this->params);
-        //var_dump($this->pdo->prepare("SELECT * FROM project1.user WHERE age=:age")->execute(["age"=>18]));
         $prepared = $this->execute();
-        //"App\\Model\\" . $modelName . "Model"
-        //echo $class."<br>";
+        $fetchArgs = "App\Model\\";
+        if ($classSubPath !== null) {
+            $fetchArgs .= $classSubPath."\\";
+        }
+        $fetchArgs .= $this->getModelName() . "Model";
         return $prepared
-            ->fetchAll(PDO::FETCH_CLASS, "App\Model\\" . $this->getModelName() . "Model");;
+            ->fetchAll(PDO::FETCH_CLASS, $fetchArgs);
     }
 
     public function execute(): PDOStatement

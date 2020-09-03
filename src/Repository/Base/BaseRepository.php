@@ -13,7 +13,7 @@ class BaseRepository implements Repository
 
     private $queryBuilder;
 
-    public function findBy(array $properties = []): array
+    public function findBy(array $properties = [], $classSubPath=null): array
     {
         $alias = explode("\\", get_class($this));
         $alias = strtolower($alias[count($alias) - 1][0]);
@@ -22,7 +22,7 @@ class BaseRepository implements Repository
             $builder->andWhere($alias . "." . $key . "=:" . $key)
                 ->setParameter($key, $value);
         }
-        return $builder->getResult();
+        return $builder->getResult($classSubPath);
     }
 
     public function createQueryBuilder(string $alias = null): QueryBuilder
