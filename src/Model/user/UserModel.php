@@ -25,13 +25,6 @@ class UserModel extends BaseModel{
         return get_class_vars(get_class($this));
     }
 
-    /**function __construct(int $id, string $name, int $age)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->age = $age;
-        
-    }*/
 
     public function setId(?int $id)
     {

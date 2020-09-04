@@ -1,6 +1,8 @@
 <?php 
 namespace App\Kernel;
 
+use App\Database\Database;
+
 class Kernel{
 
     public function getPath():string 
@@ -12,8 +14,9 @@ class Kernel{
         return $path;
     }
 
-    public function build()
+    public function createTables(array $tables = [])
     {
-        
+        $db = Database::getPDOFactory();
+        $db->createTable($tables);
     }
 }

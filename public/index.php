@@ -3,13 +3,11 @@
 use App\Kernel\Kernel;
 use App\Router\Router;
 use App\Controller\HomeController;
-use App\Controller\user\UserController;
-
-
-
+//use App\Controller\user\UserController;
 
 
 $kernel = new Kernel();
+
 $path = $kernel->getPath();
 $router = new Router($path);
 
@@ -18,9 +16,9 @@ $router->map("/", function () {
     $api = new HomeController();
     $api->index();
     })
-    ->map("/user", function () {
+/**->map("/user", function () {
         $api = new UserController();
         $api->index();
-    })
+    })**/
 
 ->build();

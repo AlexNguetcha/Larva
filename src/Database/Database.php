@@ -8,15 +8,18 @@ class Database
 {
     static function getPDO(): PDO
     {
-        $json = Json::getInstance();
+        return self::getPDOFactory()->getMsqlConnection();
+    }
 
-        $dbConfig = $json->decode(file_get_contents("../config/database.json"));
-        $pdo = new PDOFACTORY(
+    static function getPDOFactory(): PDOFACTORY
+    {
+        $json = Json::getInstance();
+        $dbConfig = $json->decode(file_get_contents("../config/database.json")); 
+        return new PDOFACTORY(
             $dbConfig["dbname"],
             $dbConfig["username"],
             $dbConfig["hostname"],
             $dbConfig["password"]
         );
-        return $pdo->getMsqlConnection();
     }
 }

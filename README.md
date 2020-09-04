@@ -1,4 +1,4 @@
-# Larva a small base PHP MVC Framework
+# Larva 1.0.1 a small base PHP Framework MVC
 
 # installation :
 ```
