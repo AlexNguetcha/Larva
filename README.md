@@ -3,7 +3,7 @@
 # installation :
 ```
 //install composer
-composer dump-autoload
+composer dump-upload
 //run project
 php -S 127.0.0.1:8001 -t public
 ```
