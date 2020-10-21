@@ -1,18 +1,6 @@
 {
     "hostname": "localhost",
-    "dbname": "okampus",
+    "dbname": "larav",
     "username": "root",
-    "password": "",
-    "local-config": {
-        "hostname": "localhost",
-        "dbname": "okampus",
-        "username": "root",
-        "password": ""
-    },
-    "production-config": {
-        "hostname": "localhost",
-        "dbname": "okampusc_kampus",
-        "username": "okampusc_okampus",
-        "password": "okampuscontrol"
-    }
+    "password": ""
 }

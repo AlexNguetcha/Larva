@@ -19,6 +19,7 @@ class Render{
          */
         $loader = new Loader;
         foreach ($params as $key => $value) {
+            $$key = $value;
         }
         require_once $root.$filename;
     }
