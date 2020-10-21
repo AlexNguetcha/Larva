@@ -22,26 +22,6 @@ class BaseController implements Controller
 
     public function render(string $filename, $params = [])
     {
-        $params["schools"] = (new SchoolRepository())->findBy();
-        $params["menu"] = $this->menu();
-        $routeName = (new Kernel)->getPath();
-
-
-        //On ne charge pas les annonces dans les
-        //pages d'administration
-        if (!(is_array(explode("/", $routeName)) && in_array("admin", explode("/", $routeName)))) {
-            // ADS
-            $adModel = (new AdRepository)->findBy();
-            if (count($adModel) > 1) {
-                $lucky = random_int(0, count($adModel) - 1);
-                $ad = $adModel[$lucky];
-                $this->addStat(StatModel::AD);
-                $params["ad"] = $ad;
-                (new AdRepository)->update($ad->setView(1 + $ad->getView()));
-            }
-            //ADS
-        }
-
         return new Render($filename, $params);
     }
 

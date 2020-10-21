@@ -8,8 +8,8 @@ abstract class BaseModel implements Model
 {
     abstract function getClassVars():array;
     
-    public function isValid():bool{
-        return true;
+    public final function isValid():bool{
+        return count($this->getErrors()) == 0;
     }
 
     public function getErrors():array
