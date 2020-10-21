@@ -121,14 +121,9 @@ class QueryBuilder
 
     private function getModelName(): string
     {
-<<<<<<< HEAD
         //$modelName = strtoupper($this->tableName[0]);
         //$modelName .= str_replace($this->tableName[0], "", $this->tableName);
         $modelName = ucwords($this->tableName);
-=======
-        $modelName = strtoupper($this->tableName[0]);
-        $modelName .= str_replace($this->tableName[0], "", $this->tableName);
->>>>>>> e47bff1c771799cb06b76ded159052e3ff1cd8e0
         return $modelName;
     }
 
