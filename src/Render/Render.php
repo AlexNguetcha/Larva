@@ -18,10 +18,7 @@ class Render{
          * présente dans le tableau
          */
         $loader = new Loader;
-        //print_r($params["schools"]);
         foreach ($params as $key => $value) {
-            $tmp = $key;
-            $$tmp = $value;
         }
         require_once $root.$filename;
     }

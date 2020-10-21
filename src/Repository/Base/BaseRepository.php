@@ -61,10 +61,15 @@ class BaseRepository implements Repository
             if ($i !== count($vars) - 1) {
                 $query .= ", ";
             }
+<<<<<<< HEAD
             $getter = $key;
             //echo $key.":::".$getter."<br>";
             $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
             $getter = str_replace("_", "", $getter);
+=======
+            $getter = $key[0];
+            $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
+>>>>>>> e47bff1c771799cb06b76ded159052e3ff1cd8e0
             //appel du getter et recuperation
             //de la valeur de chaque proprietes
             $getterValue = null;
@@ -95,9 +100,14 @@ class BaseRepository implements Repository
                 if ($i !== count($vars) - 2) {
                     $query .= ", ";
                 }
+<<<<<<< HEAD
                 $getter = $key;
                 $getter = "get" . strtolower($getter) . str_replace($getter, "", $key);
                 $getter = str_replace("_", "", $getter);
+=======
+                $getter = $key[0];
+                $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
+>>>>>>> e47bff1c771799cb06b76ded159052e3ff1cd8e0
                 //appel du getter et recuperation
                 //de la valeur de chaque proprietes
                 $getterValue =  call_user_func(array($model, $getter));
