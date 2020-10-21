@@ -23,7 +23,7 @@ use Exception;
 
     	public function getMsqlConnection(){
     	    try{
-                $db = new PDO("mysql:dbname=".$this->db_name.";host=".$this->host_name,$this->db_username,$this->db_password);
+                $db = new PDO("mysql:dbname=".$this->db_name.";charset=utf8;host=".$this->host_name,$this->db_username,$this->db_password);
                 $db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
                 return  $db;
             }catch (Exception $e){

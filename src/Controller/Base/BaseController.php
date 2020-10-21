@@ -29,7 +29,6 @@ class BaseController implements Controller
     {
         return new Request();
     }
-<<<<<<< HEAD
 
     public function mapForm(Request $request, BaseModel $model): BaseModel
     {
@@ -56,12 +55,3 @@ class BaseController implements Controller
         $statRepo->insert($statModel);
     }
 }
-=======
-    
-    function json()
-    {
-        return Json::getInstance();
-    }
-    
-}
->>>>>>> e47bff1c771799cb06b76ded159052e3ff1cd8e0
