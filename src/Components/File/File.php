@@ -2,7 +2,9 @@
 
 namespace App\Components\File;
 
-
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class File
 {
     private $filename;

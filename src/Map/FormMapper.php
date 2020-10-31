@@ -6,6 +6,9 @@ namespace App\Map;
 use App\Components\Request;
 use App\Model\Base\BaseModel;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class FormMapper
 {
     public function map(Request $request, BaseModel $model): BaseModel

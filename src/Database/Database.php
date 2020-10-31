@@ -5,6 +5,9 @@ use PDO;
 use App\Components\Json;
 use App\Database\PDOFACTORY;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Database
 {
     static function getPDO(): PDO

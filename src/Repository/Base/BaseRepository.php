@@ -7,6 +7,10 @@ use App\Database\Database;
 use App\Model\Base\BaseModel;
 use App\Repository\Base\QueryBuilder;
 
+
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class BaseRepository implements Repository
 {
 
@@ -44,7 +48,7 @@ class BaseRepository implements Repository
     }
 
     /**
-     * Met à jour un Model en base de donée
+     * Update a model in database
      *
      * @param BaseModel $model
      * @return BaseModel
@@ -52,7 +56,7 @@ class BaseRepository implements Repository
     public final function insert(BaseModel $model): BaseModel
     {
         $query = "INSERT INTO " . $this->getTableName() . " VALUES(";
-        //recuperation des proprietes du model
+        //getting model properties
         $vars = $model->getClassVars();
         $i = 0;
         $params = [];
@@ -62,11 +66,10 @@ class BaseRepository implements Repository
                 $query .= ", ";
             }
             $getter = $key;
-            //echo $key.":::".$getter."<br>";
             $getter = "get" . strtoupper($getter) . str_replace($getter, "", $key);
             $getter = str_replace("_", "", $getter);
-            //appel du getter et recuperation
-            //de la valeur de chaque proprietes
+            //call and get getter result
+            //for each property
             $getterValue = null;
             if (strtolower($getter) !== "getid") {
                 $getterValue =  call_user_func(array($model, $getter));
@@ -98,8 +101,6 @@ class BaseRepository implements Repository
                 $getter = $key;
                 $getter = "get" . strtolower($getter) . str_replace($getter, "", $key);
                 $getter = str_replace("_", "", $getter);
-                //appel du getter et recuperation
-                //de la valeur de chaque proprietes
                 $getterValue =  call_user_func(array($model, $getter));
                 $params[$key] = $getterValue;
                 $i++;

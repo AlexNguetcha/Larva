@@ -2,6 +2,9 @@
 
 namespace App\Components;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Request
 {
     public $post;

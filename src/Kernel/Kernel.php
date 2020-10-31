@@ -3,6 +3,9 @@ namespace App\Kernel;
 
 use App\Database\Database;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Kernel{
 
     public function getPath():string 

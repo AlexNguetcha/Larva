@@ -4,6 +4,9 @@ namespace App\Model\Base;
 
 use App\Repository\Base\QueryBuilder;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 abstract class BaseModel implements Model
 {
     abstract function getClassVars():array;

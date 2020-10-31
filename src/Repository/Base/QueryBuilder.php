@@ -63,12 +63,11 @@ class QueryBuilder
     {
         if (strlen($this->queryString) !== 0) {
             /**
-             * queryString a été parametrer a partir 
-             * du setter
+             * queryString have been set via setter method
              */
             return $this->queryString;
         } else {
-            //construction automatique d'une select request
+            //auto-builduing of select query
             return $this->createSelectQuery();
         }
     }
@@ -110,8 +109,6 @@ class QueryBuilder
     }
 
     /**
-     * Undocumented function
-     *
      * @return PDOStatement
      */
     public function getQuery(): PDOStatement
@@ -121,19 +118,16 @@ class QueryBuilder
 
     private function getModelName(): string
     {
-        //$modelName = strtoupper($this->tableName[0]);
-        //$modelName .= str_replace($this->tableName[0], "", $this->tableName);
         $modelName = ucwords($this->tableName);
         return $modelName;
     }
 
     /**
-     * Recupere un tableau d'objet modèle
+     * Get a model table
      *
      * @param string $classSubPath 
-     * est necessaire si la classe représentant 
-     * le modéle ne se retrouve pas dans la racine
-     * du dossier Model
+     * must be set if model class is on a subdirectory 
+     * in src/Model
      * @return array
      */
     public function getResult(string $classSubPath=null)

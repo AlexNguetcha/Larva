@@ -16,6 +16,9 @@ use App\Kernel\Kernel;
 use App\Repository\StatRepository;
 use App\Repository\SchoolRepository;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class BaseController implements Controller
 {
 

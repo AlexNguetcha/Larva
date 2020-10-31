@@ -1,6 +1,9 @@
 <?php 
 namespace App\Components;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Json{
     private static $instance = 0;
     private static $json;

@@ -3,9 +3,9 @@ namespace App\Database;
 
 use PDO;
 use Exception;
-    /**
-     * 
-     */
+   /**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
     class PDOFACTORY
     {
         private $db_name;

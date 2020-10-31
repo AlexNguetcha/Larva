@@ -4,6 +4,9 @@ namespace App\Components;
 use Exception;
 use App\Components\File\File;
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Alpha
 {
     /** the settings for Alpha file manager
