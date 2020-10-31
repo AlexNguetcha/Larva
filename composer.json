@@ -1,11 +1,14 @@
 {
     "name": "alexnguetcha/larva",
+    "type": "project",
+    "license": "MIT",
     "authors": [
         {
             "name": "alexnguetcha",
             "email": "nguetchaalex@gmail.com"
         }
     ],
+    "minimum-stability": "stable",
     "require": {},
     "autoload": {
         "psr-4": {
