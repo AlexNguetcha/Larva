@@ -1,27 +1,33 @@
 # Welcome to Larva 1.2.0
 
-# What News ?
+# What News?
+
 1. Larva console added ☺
 you can now create *model*,*repository*,*controller*,*templates* and launch project via command line :
+
 ```php
 //launch project
 php bin/larva  serve
 //create a model, repo, controller and template in same command
 php bin/larva make User
-//create a model 
+//create a model
 php bin/larva make:model model_name
 //create a repository
 php bin/larva make:repository repo_name
 //create a controller
 php bin/larva make:controller controller_name
-//create a template 
+//create a template
 php bin/larva make:template template_name
 ```
+
 2. Easy upload any file via Alpha:
-### what is Alpha ?
+
+### what is Alpha?
+
 Alpha is a larva component that help you for file uploading
 Example :  
-```php 
+```php
+
 //....
 class UploadController extends BaseController
 {
@@ -40,15 +46,19 @@ class UploadController extends BaseController
 }
 
 # installation :
-```
+
+```php
+
 //install composer
 composer dump-upload
 //run project
 php -S 127.0.0.1:8001 -t public
 ```
 
-## databse configuration :
+## databse configuration ##
+
 configure database in config/databse.json
+
 ```json
 {
     "hostname": "localhost",
@@ -57,7 +67,6 @@ configure database in config/databse.json
     "password": ""
 }
 ```
-
 
 ## PDOFactory :
 
