@@ -40,12 +40,4 @@ class BaseController implements Controller
         return Json::getInstance();
     }
 
-    public function addStat(string $type)
-    {
-        $statModel = new StatModel;
-        $statModel->setType($type)
-            ->setAt((new DateTime())->format("Y-m-d H:i:s"));
-        $statRepo = new StatRepository;
-        $statRepo->insert($statModel);
-    }
 }

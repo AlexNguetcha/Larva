@@ -15,7 +15,6 @@ class HomeController extends BaseController{
         ->addFileExtension("png", "gif")
         ->addFileMimeType("image/png", "image/gif");
        
-        var_dump($alpha->getSettings());
         return $this->render("home.php", ["message"=> "Welcome to Larva !"]);
     }
 
