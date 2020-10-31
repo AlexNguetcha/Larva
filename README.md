@@ -44,6 +44,7 @@ class UploadController extends BaseController
         $alpha->uploadFile("new_filename", "custom/upload/directory")
     }
 }
+```
 
 # installation :
 
