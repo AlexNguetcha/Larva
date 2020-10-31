@@ -8,7 +8,7 @@
             "email": "nguetchaalex@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "alpha",
     "require": {},
     "autoload": {
         "psr-4": {
