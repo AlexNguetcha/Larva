@@ -286,7 +286,18 @@ class CMD
                     return $this->error($command . " not found");
                     break;
             }
-        } else {
+        }else if(count($args) === 2) {
+            if ($args[1] === "serve") {
+                $out = [];
+                exec("php -S 127.0.0.1:8001 -t public", $out);
+                for ($i=0; $i < count($out); $i++) { 
+                    echo $out;
+                }
+            }else {
+                return $this->error("larva error :");
+            }
+        }
+        else {
             return $this->error("larva error :");
         }
     }

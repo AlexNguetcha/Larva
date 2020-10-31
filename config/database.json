@@ -1,6 +1,6 @@
 {
     "hostname": "localhost",
-    "dbname": "larav",
+    "dbname": "larva",
     "username": "root",
     "password": ""
 }

@@ -19,7 +19,6 @@ use App\Repository\SchoolRepository;
 class BaseController implements Controller
 {
 
-
     public function render(string $filename, $params = [])
     {
         return new Render($filename, $params);
@@ -34,11 +33,6 @@ class BaseController implements Controller
     {
         $formMapper = new FormMapper();
         return $formMapper->map($request, $model);
-    }
-
-    public function menu(): array
-    {
-        return MenuController::getMenu();
     }
 
     public function json()

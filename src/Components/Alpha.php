@@ -8,6 +8,15 @@ class Alpha
 {
     /** the settings for Alpha file manager
      * @var array
+     * example:
+     * $settings = [
+     *           root" => "web/",
+     *           "file" => [
+     *               "extensions" => ["pdf", "png", "jpg", "jpeg", "gif"],
+     *              "mime_type" => ["application/pdf", "image/png", "image/jpg", "image/jpeg", "image/gif"],
+     *              "max_size" => 10*1024*1024
+     *          ]
+     *      ];
      */
     private $settings = [];
 
@@ -26,12 +35,52 @@ class Alpha
     /** 
      * @throws Exception
      */
-    public function __construct(array $settings)
+    public function __construct(array $settings=[])
     {
-        $this->checkSettings($settings);
-        $this->settings = $settings;
-        $this->rootPath = $settings["root"];
-        $this->fileList = $this->list();
+        if ($settings != []) {
+            $this->checkSettings($settings);
+            $this->settings = $settings;
+            $this->rootPath = $settings["root"];
+            $this->fileList = $this->list();
+        }else{
+            $this->settings["file"]["extensions"] = [];
+            $this->settings["file"]["max_size"] = 0;
+            $this->settings["file"]["mime_type"] = [];
+        }
+        
+    }
+
+    public function setRootPath(string $root):self
+    {
+        $this->settings["root"] = $root;
+        return $this;
+    }
+
+    public function setMaxFileSize(int $size):self
+    {
+        $this->settings["file"]["max_size"] = $size;
+        return $this;
+    }
+
+    public function addFileExtension(...$extensions)
+    {
+        foreach($extensions as $extension){
+            array_push($this->settings["file"]["extensions"], $extension);
+        }
+        return $this;
+    }
+
+    public function addFileMimeType(...$mimeTypes)
+    {
+        foreach($mimeTypes as $mimeType){
+            array_push($this->settings["file"]["mime_type"], $mimeType);
+        }
+        return $this;
+    }
+
+    public function getSettings()
+    {
+        return $this->settings;
     }
 
     public function checkSettings($settings)
@@ -81,8 +130,12 @@ class Alpha
      * @param string $directory
      * @return string|bool
      */
-    public function uploadFile($file, $directory)
+    public function uploadFile($file, $directory=null)
     {
+        if ($directory === null) {
+            $directory = $this->rootPath;
+        }
+        $this->checkSettings($settings);
         $errors = [];
         $fileName = $file["name"];
         $fileSize = $file["size"];

@@ -23,4 +23,9 @@ class Request
         return isset($_REQUEST[$key]) ? $_REQUEST[$key] : $default;
     }
 
+    public function getMethod(): string
+    {
+        return $_SERVER["REQUEST_METHOD"];
+    }
+
 }
