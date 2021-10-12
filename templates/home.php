@@ -18,7 +18,7 @@
         width: max-content;
         padding: 1%;
         border-radius: 4px;
-        background-color: #D4EDDA;
+        background-color: #f5f5f5;
         text-align: center;
         color: #155724;
         font-size: 20px;
@@ -36,7 +36,7 @@
     <div class="alert alert-info" role="alert">
          <h2 class="alert-heading"><?= $message ;?></h2>
          <p>Nice job ! your are ready to code</p>
-         <p class="mb-0"><a href="https://github.com/alexnguetcha/Larva">Contribute to the Larva Project here now</a></p>
+         <p class="mb-0"><a href="https://github.com/alexnguetcha/Larva">Contribute to the Larva project here now</a></p>
     </div>
 </div>
 </body>
