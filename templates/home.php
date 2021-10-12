@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Larva</title>
+    <title>Welcome to Larva</title>
 </head>
 <body>
 <style>
@@ -17,20 +17,26 @@
     .alert{
         width: max-content;
         padding: 1%;
-        border-radius: 2%;
+        border-radius: 4px;
         background-color: #D4EDDA;
         text-align: center;
         color: #155724;
-        font-size: sans-serif;
+        font-size: 20px;
         margin: auto;
         transform: translate(0, 50%);
+        font-family: Arial, Helvetica, sans-serif;
+        box-shadow: 0px 1px 3px #333333;
+    }
+    .alert a{
+        text-decoration: none;
+        color: #2ab;
     }
 </style>
 <div class="container">
     <div class="alert alert-info" role="alert">
          <h2 class="alert-heading"><?= $message ;?></h2>
-         <p>Nice job ! your are ready to code.</p>
-         <p class="mb-0"><a href="http://github.com/alexnguetcha/larva.git">http://github.com/alexnguetcha/larva.git</a></p>
+         <p>Nice job ! your are ready to code</p>
+         <p class="mb-0"><a href="https://github.com/alexnguetcha/Larva">Contribute to the Larva Project here now</a></p>
     </div>
 </div>
 </body>

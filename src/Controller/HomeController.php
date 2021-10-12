@@ -8,8 +8,8 @@ use App\Controller\Base\BaseController;
 class HomeController extends BaseController{
 
     public function index():Render
-    {       
-        return $this->render("home.php", ["message"=> "Welcome to Larva !"]);
+    {        
+        return $this->render("home.php", ["message"=> "Welcome to Larva 2.0 !"]);
     }
 
 }
