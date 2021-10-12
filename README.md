@@ -1,13 +1,27 @@
-# Welcome to Larva 1.2.0
+# Welcome to Larva 1.5.1
 
 # What News?
 
 1. Larva console added ☺
-you can now create *model*,*repository*,*controller*,*templates* and launch project via command line :
+you can now generate 
+
+  [V 1.5.1]
+ - Sql table creation code for a model
+   ```php
+     //generate sql code
+     php bin/larva make:sql model_name
+   ```
+ - CRUD routes with an API controller for a model
+    ```php
+     //generate sql code
+     php bin/larva make:api model_name
+    ```
+
+*model*,*repository*,*controller*,*templates* and launch project via command line :
 
 ```php
 //launch project
-php bin/larva  serve
+php -S 127.0.0.1:5000 -t public
 //create a model, repo, controller and template in same command
 php bin/larva make User
 //create a model

@@ -9,7 +9,7 @@ class HomeController extends BaseController{
 
     public function index():Render
     {        
-        return $this->render("home.php", ["message"=> "Welcome to Larva 2.0 !"]);
+        return $this->render("home.php", ["message"=> "Welcome to Larva 1.5.1 !"]);
     }
 
 }

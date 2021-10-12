@@ -36,7 +36,7 @@
     <div class="alert alert-info" role="alert">
          <h2 class="alert-heading"><?= $message ;?></h2>
          <p>Nice job ! your are ready to code</p>
-         <p class="mb-0"><a href="https://github.com/alexnguetcha/Larva">Contribute to the Larva project here now</a></p>
+         <p class="mb-0"><a target="_blanck" rel="noreferrer" href="https://github.com/alexnguetcha/Larva">Contribute to the Larva project here now</a></p>
     </div>
 </div>
 </body>
