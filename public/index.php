@@ -3,23 +3,18 @@ require_once "../vendor/autoload.php";
 
 use App\Kernel\Kernel;
 use App\Render\Render;
-use App\Model\StatModel;
 use App\Router\AltoRouter;
-use App\Components\Request;
-use App\Controller\AdController;
 use App\Controller\HomeController;
-use App\Repository\StatRepository;
-use App\Controller\AdminController;
-use App\Controller\SchoolController;
-use App\Controller\ArticleController;
-use App\Controller\SubjectController;
+
 
 $kernel = new Kernel();
 
 $tables = [
   //"CREATE TABLE IF NOT EXISTS `user` ( `id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;",
 ];
+
 $kernel->createTables($tables);
+
 
 $path = $kernel->getPath();
 
@@ -50,5 +45,5 @@ if (is_array($match) && is_callable($match['target'])) {
   }
 } else {
   $home = new HomeController;
-  return $home->render("404.php", ["route" => $match['name']]);
+  return new Render("404.php", ["route" => $path]);
 }

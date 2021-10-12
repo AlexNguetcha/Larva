@@ -612,7 +612,7 @@ class CMD
                 break;
             }
             $sql .= "`".$attr."` ".strtoupper($type);
-            if (intval($maxType)===0) {
+            if (intval($maxType)!==0) {
                 $sql .= "(".intval($maxType).")";
             }
             $sql .= " NOT NULL,\n";

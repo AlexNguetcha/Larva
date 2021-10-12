@@ -35,7 +35,7 @@
 <div class="container">
     <div class="alert">
          <h2 class="alert-heading">Page not found !</h2>
-         <p><?= $message ;?></p>
+         <p>the route <b><?= $route ;?> </b>not work, you should verify your routes on index.php</p>
          <p class="mb-0"><a href="https://github.com/alexnguetcha/Larva">Contribute to the Larva Project here now</a></p>
     </div>
 </div>
