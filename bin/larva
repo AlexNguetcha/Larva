@@ -1,5 +1,7 @@
 <?php
 
+use App\Model\ArticleModel;
+
 /**
  * JsonToClass allow you to create a php model
  * class from a json file.
@@ -282,17 +284,24 @@ class CMD
                 case 'make:template':
                     $this->makeTemplate($classname);
                     break;
+                case 'make:api':
+                    $this->makeAPI($classname);
+                    break;
+                case 'make:sql':
+                    $this->makeSql($classname);
+                    break;
                 default:
                     return $this->error($command . " not found");
                     break;
             }
         }else if(count($args) === 2) {
             if ($args[1] === "serve") {
-                $out = [];
-                exec("php -S 127.0.0.1:8001 -t public", $out);
+                $out = [ "http://localhost:8001"];
                 for ($i=0; $i < count($out); $i++) { 
-                    echo $out;
+                    echo $out[$i];
                 }
+                exec("php -S 127.0.0.1:8001 -t public", $out);
+                
             }else {
                 return $this->error("larva error :");
             }
@@ -348,7 +357,7 @@ class CMD
         $controller .= "class $classname extends BaseController\n{\n\n";
         $controller .= "\tpublic function index():Render\n";
         $controller .= "\t{\n";
-        $controller .= "\t\treturn new Render(\"base.php\", [\"message\"=> \"Your are welcome !\"]);\n";
+        $controller .= "\t\treturn $"."this->render(\"base.php\", [\"message\"=> \"Your are welcome !\"]);\n";
         $controller .= "\t}\n";
         $controller .= "}\n";
         
@@ -383,6 +392,240 @@ class CMD
         fclose($file);
     }
 
+    public function makeAPI($classname)
+    {
+        $this->makeAPIControllerData($classname); 
+        $this->makeAPIRouteData($classname);        
+        
+    }
+
+    public function makeAPIRouteData($classname)
+    {
+        $classnameRoute = "API".ucwords($classname)."Controller";
+        $filename = "public/routes/".$classname.".php";
+
+        if (file_exists($filename) === true) {
+            throw new Exception($filename . " already exist!");
+        }
+        $controller = "<?php\n\n";
+        $controller .= "header('Content-Type: application/json');\n";
+        $controller .= "use App\Components\Request;\n";
+        $controller .= "use App\Controller\\".$classnameRoute.";\n\n\n";
+
+        
+        //New
+        $controller .= "$"."router->map('POST', '/api/".$classname."/new/', function () {\n";
+        $controller .= "\techo (new ".$classnameRoute.")->new(new Request);\n";
+        $controller .= "}, '".$classname.".new');\n";
+        //Update
+        $controller .= "$"."router->map('POST', '/api/".$classname."/update/', function () {\n";
+        $controller .= "\techo (new ".$classnameRoute.")->update(new Request);\n";
+        $controller .= "}, '".$classname.".update');\n";
+        //Delete
+        $controller .= "$"."router->map('POST', '/api/".$classname."/delete/', function () {\n";
+        $controller .= "\techo (new ".$classnameRoute.")->delete(new Request);\n";
+        $controller .= "}, '".$classname.".delete');\n";
+        //All
+        $controller .= "$"."router->map('POST', '/api/".$classname."s/get/', function () {\n";
+        $controller .= "\techo (new ".$classnameRoute.")->all(new Request);\n";
+        $controller .= "}, '".$classname."s.get');\n";
+          
+        $file = fopen($filename, "w+");
+        fwrite($file,  $controller);
+        fclose($file);
+    }
+
+    public function makeAPIControllerData($classname)
+    {
+        $classnameController = "API".ucwords($classname)."Controller";
+        $filename = "src/Controller/".$classnameController.".php";
+
+        if (file_exists($filename) === true) {
+            throw new Exception($filename . " already exist!");
+        }
+        $controller = "<?php namespace App\Controller;\n\n";
+        $controller .= "use App\Render\Render;\n";
+        $controller .= "use App\Components\Request;\n";
+        $controller .= "use App\Model\\".ucwords($classname)."Model;\n";
+        $controller .= "use App\Repository\\".ucwords($classname)."Repository;\n";
+        $controller .= "use App\Controller\Base\BaseController;\n\n\n";
+        
+        $controller .= "class $classnameController extends BaseController\n{\n";
+        
+        $controller .= "\tprivate $".$classname."Repo;\n";
+
+        $constructor = "\n\tpublic function __construct() \n\t{\n";
+        $constructor .= "\t\t$"."this->".$classname."Repo = new ".ucwords($classname)."Repository;\n";;
+        $constructor .= "\t}\n\n";
+        $controller .= $constructor;
+
+        $controller .= $this->makeAPINewData($classname);
+
+        $controller .= $this->makeAPIUpdateData($classname);
+
+        $controller .= $this->makeAPIDeleteData($classname);
+
+        $controller .= $this->makeAPIGetData($classname);
+
+        $controller .= $this->makeAPIAllData($classname);
+
+        $controller .= "\n}";
+        
+        $file = fopen($filename, "w+");
+        fwrite($file,  $controller);
+        fclose($file);
+    }
+
+    public function makeAPINewData($classname)
+    {
+        $data = "\tpublic function new(Request $"."request)\n";
+        $data .= "\t{\n";
+        $data .= "\t\t/**\n\t\t* @var ".ucwords($classname)."Model\n\t\t*/\n";
+        $data .= "\t\t$".$classname." = $"."this->mapForm($"."request, new ".ucwords($classname)."Model);\n";
+        $data .= "\t\tif(count($".$classname."->getErrors())===0){\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => $".$classname."->getErrors()]);\n";
+        $data .= "\t\t}else{\n";
+        $data .= "\t\t\t$"."this->".$classname."Repo->insert($".$classname.");\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 0,'message' => 'created']);\n";
+        $data .= "\t\t}\n";
+        $data .= "\t}\n";
+        return $data;
+    }
+
+    public function makeAPIUpdateData($classname)
+    {
+        $data = "\tpublic function update(Request $"."request)\n";
+        $data .= "\t{\n";
+        $data .= "\t\t$"."id = $"."request->post->get('_id',-1);\n";
+        $data .= "\t\t$"."models = $"."this->".$classname."Repo->findBy(['id'=>$"."id]);\n";
+        $data .= "\t\tif(count($"."models)!==1){\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => 'model not found']);\n";
+        $data .= "\t\t}else{\n";
+        $data .= "\t\t\t/**\n\t\t\t* @var ".ucwords($classname)."Model)\n\t\t\t*/\n";
+        $data .= "\t\t\t$".$classname." = $"."models[0];\n";
+
+        $data .= "\t\t\tif(count($".$classname."->getErrors())===0){\n";
+        $data .= "\t\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => $".$classname."->getErrors()]);\n";
+        $data .= "\t\t\t}else{\n";
+        $data .= "\t\t\t\t$"."this->".$classname."Repo->update($".$classname.");\n";
+        $data .= "\t\t\t\treturn $"."this->json()->encode(['code' => 0,'message' => 'updated']);\n";
+        $data .= "\t\t\t}\n";
+        $data .= "\t\t}\n";
+
+        $data .= "\t}\n";
+        return $data;
+    }
+
+    public function makeAPIDeleteData($classname)
+    {
+        $data = "\tpublic function delete(Request $"."request)\n";
+        $data .= "\t{\n";
+        $data .= "\t\t$"."id = $"."request->post->get('_id',-1);\n";
+        $data .= "\t\t$"."models = $"."this->".$classname."Repo->findBy(['id'=>$"."id]);\n";
+        $data .= "\t\tif(count($"."models)!==1){\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => 'model not found']);\n";
+        $data .= "\t\t}else{\n";
+        $data .= "\t\t\t/**\n\t\t\t* @var ".ucwords($classname)."Model\n\t\t\t*/\n";
+        $data .= "\t\t\t$".$classname." = $"."models[0];\n";
+
+        $data .= "\t\t\tif(count($".$classname."->getErrors())===0){\n";
+        $data .= "\t\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => $".$classname."->getErrors()]);\n";
+        $data .= "\t\t\t}else{\n";
+        $data .= "\t\t\t\t$"."this->".$classname."Repo->delete($".$classname.");\n";
+        $data .= "\t\t\t\treturn $"."this->json()->encode(['code' => 0,'message' => 'deleted']);\n";
+        $data .= "\t\t\t}\n";
+        $data .= "\t\t}\n";
+
+        $data .= "\t}\n";
+        return $data;
+    }
+
+    public function makeAPIGetData($classname)
+    {
+        $data = "\tpublic function get(Request $"."request)\n";
+        $data .= "\t{\n";
+        $data .= "\t\t$"."id = $"."request->post->get('_id',-1);\n";
+        $data .= "\t\t$"."models = $"."this->".$classname."Repo->findBy(['id'=>$"."id]);\n";
+        $data .= "\t\tif(count($"."models)!==1){\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 1,'message' => 'model not found']);\n";
+        $data .= "\t\t}else{\n";
+        $data .= "\t\t\t/**\n\t\t\t* @var ".ucwords($classname)."Model\n\t\t\t*/\n";
+        $data .= "\t\t\t$".$classname." = $"."models[0];\n";
+
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 0,'".$classname."' => $".$classname."->toArray()]);\n";
+        $data .= "\t\t}\n";
+        
+        $data .= "\t}\n";
+        return $data;
+    }
+
+    public function makeAPIAllData($classname)
+    {
+        $data = "\tpublic function all(Request $"."request)\n";
+        $data .= "\t{\n";
+        //$data .= "\t\t$"."id = $"."request->post->get('_id',-1);\n";
+        $data .= "\t\t$"."models = $"."this->".$classname."Repo->findBy();\n";
+        $data .= "\t\t$"."modelsArray = [];\n";
+        $data .= "\t\tfor($"."i=0; $"."i<count($"."models);$"."i++) {\n";
+        $data .= "\t\t\tarray_push($"."modelsArray, $"."models[$"."i]->toArray()".");\n";
+        $data .= "\t\t}\n";
+        $data .= "\t\t\treturn $"."this->json()->encode(['code' => 0,'".$classname."s' => $"."modelsArray]);\n";
+        $data .= "\t}\n";
+        return $data;
+    }
+
+    public function makeSql($classname) {
+        
+        /**$model = "App\Model\\".ucwords($classname)."Model";
+        $model = "src\Model\\".ucwords($classname)."Model";
+        $model = new $model();
+       
+        $modelAttrs = get_class_vars("src\Model\\".ucwords($classname)."Model");
+        print_r($modelAttrs);
+        return;**/
+        $sql = "CREATE TABLE IF NOT EXISTS `".$classname."`(\n";
+        $SQL_TYPES = ["int", "datetime", "text", "varchar", "float", "date", "time"];
+
+        /**for ($i=0; $i < count($modelAttrs); $i++) { 
+            $attr = $modelAttrs[$i];
+            $type = null;
+            do{
+                $type = readline("Enter type of ".$attr.": ");
+                $maxType = readline("Enter max lenght of ".$attr." : ");
+            }while(!in_array(strtolower($type), $SQL_TYPES) && !is_int($maxType));
+            $sql .= "`".$attr."` ".strtoupper($type)."(".intval($maxType).") NOT NULL,\n";
+        }**/
+
+        $sql .= "`id` INT NOT NULL AUTO_INCREMENT,\n";
+
+        do{
+            do{
+                $attr = readline("Enter attribute: ");
+                if (strlen($attr)===0) {
+                    break;
+                }
+                $type = readline("Enter type of ".$attr.": ");
+                $maxType = readline("Enter max lenght of ".$attr." : ");
+            }while(!in_array(strtolower($type), $SQL_TYPES) && !is_int($maxType));
+            if (strlen($attr)===0) {
+                echo "generating sql...";
+                break;
+            }
+            $sql .= "`".$attr."` ".strtoupper($type);
+            if (intval($maxType)===0) {
+                $sql .= "(".intval($maxType).")";
+            }
+            $sql .= " NOT NULL,\n";
+        }while(strlen($attr)>0);
+        $sql .= "PRIMARY KEY (`id`)\n";
+        $sql .= ") ENGINE = MyISAM;";
+        echo "done! (public/sql/".$classname.".sql)";
+        
+
+        $file = fopen("public/sql/".$classname.".sql", "w+");
+        fwrite($file, $sql);
+        fclose($file);
+    }
 
 
 }
