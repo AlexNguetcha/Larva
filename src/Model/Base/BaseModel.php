@@ -19,4 +19,7 @@ abstract class BaseModel implements Model
     {
         return [];
     }
+
+    public abstract function toArray():array;
+    
 }
