@@ -31,7 +31,7 @@ class JsonToClass
             if ($key === "class_name") {
                 //get the class name
                 $this->class_name = $value;
-                $this->class_name = strtoupper($this->class_name[0]) . str_replace($this->class_name[0], "", $this->class_name);
+                $this->class_name = ucwords($this->class_name);
             } else if ($key === "class_attrs") {
                 //get all class attributes
 
@@ -53,6 +53,23 @@ class JsonToClass
     public function getAttrs()
     {
         return $this->attrs;
+    }
+
+    public function buildToArray()
+    {
+        $data = "\tpublic function toArray():array\n\t{\n";
+        $data .= "\t\t return [\n";
+        for ($i = 0; $i < count($this->attrsNames); $i++) {
+            $attrName = $this->attrsNames[$i];
+            $data .= "\t\t\t'".$attrName."' => $"."this->get".ucwords($attrName)."()";
+            if($i !== count($this->attrsNames)-1){
+                $data .= ",";
+            }
+            $data .= "\n";
+        }
+        $data .= "\t\t];\n";
+        $data .= "\t}";
+        return $data;
     }
 
     private function buildConstructor()
@@ -167,6 +184,8 @@ class JsonToClass
         $this->str .= $this->buildGetters();
         $this->str .= "\n";
         $this->str .= $this->buildSetters();
+        $this->str .= "\n";
+        $this->str .= $this->buildToArray();
         $this->str .= "\n";
         $this->str .= "\tpublic function getClassVars(): array\n";
         $this->str .= "\t{\n";
@@ -570,19 +589,11 @@ class CMD
         $data .= "\t\t\tarray_push($"."modelsArray, $"."models[$"."i]->toArray()".");\n";
         $data .= "\t\t}\n";
         $data .= "\t\t\treturn $"."this->json()->encode(['code' => 0,'".$classname."s' => $"."modelsArray]);\n";
-        $data .= "\t}\n";
+        $data .= "\t}\n\n";
         return $data;
     }
 
     public function makeSql($classname) {
-        
-        /**$model = "App\Model\\".ucwords($classname)."Model";
-        $model = "src\Model\\".ucwords($classname)."Model";
-        $model = new $model();
-       
-        $modelAttrs = get_class_vars("src\Model\\".ucwords($classname)."Model");
-        print_r($modelAttrs);
-        return;**/
         $sql = "CREATE TABLE IF NOT EXISTS `".$classname."`(\n";
         $SQL_TYPES = ["int", "datetime", "text", "varchar", "float", "date", "time"];
 
